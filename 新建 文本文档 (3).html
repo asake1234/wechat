@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信视频号运营战略规划报告 v2.1</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fdfbf7; /* Warm neutral background */
+            color: #1f2937;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .nav-item.active {
+            background-color: #f3f4f6;
+            color: #059669; /* Emerald 600 */
+            border-right: 4px solid #059669;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Animation utilities */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutral Background (#fdfbf7) with Emerald Green Accents (#059669) for growth/trust, and Slate (#1f2937) for text. -->
+    <!-- Application Structure Plan:
+        1. Sidebar Navigation: Allows quick jumping between strategic modules.
+        2. Dashboard (Home): High-level comparison (Radar Chart) and Core Philosophy.
+        3. Alliance & Profit (Deep Dive): The user requested "Research" section. Interactive calculator for profit sharing.
+        4. Central Material Library (Deep Dive): Visual workflow of the content engine.
+        5. Operations & Tactics: SOPs, User Personas, and Search Strategy.
+        6. Action Plan: Interactive Checklist.
+        
+        Why this structure?
+        It separates the "Strategic Thinking" (Why) from the "Financial Mechanics" (How much) and "Operational Execution" (How to).
+        The Alliance section is prioritized as a specific user interest.
+    -->
+    <!-- Visualization & Content Choices:
+        - Radar Chart: To contrast Douyin vs WeChat attributes (Trust, Social, Speed, etc.). Goal: Compare.
+        - Funnel Chart (Bar representation): To show the flow from Public -> Private -> Split. Goal: Inform/Process.
+        - Calculator (JS): To simulate profit splitting. Goal: Engage/Plan.
+        - Flow Diagram (HTML/CSS): For Material Library workflow. Goal: Organize.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col z-10">
+        <div class="p-6 border-b border-gray-100">
+            <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-video text-emerald-600 mr-2"></i>视频号战略</h1>
+            <p class="text-xs text-gray-500 mt-1">版本 2.1 (进阶版)</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li><button onclick="navigateTo('dashboard')" class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors active" id="nav-dashboard"><i class="fas fa-chart-pie w-6"></i> 战略总览</button></li>
+                <li><button onclick="navigateTo('alliance')" class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors" id="nav-alliance"><i class="fas fa-users w-6"></i> 推客联盟体系 <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 rounded-full ml-2">重点</span></button></li>
+                <li><button onclick="navigateTo('cml')" class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors" id="nav-cml"><i class="fas fa-photo-video w-6"></i> 中央素材库</button></li>
+                <li><button onclick="navigateTo('operations')" class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors" id="nav-operations"><i class="fas fa-tasks w-6"></i> 运营实操 SOP</button></li>
+                <li><button onclick="navigateTo('growth')" class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors" id="nav-growth"><i class="fas fa-search w-6"></i> 增量赛道 (SEO)</button></li>
+                <li><button onclick="navigateTo('action')" class="nav-item w-full text-left px-6 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors" id="nav-action"><i class="fas fa-check-circle w-6"></i> 行动清单</button></li>
+            </ul>
+        </nav>
+        <div class="p-4 border-t border-gray-100">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">M</div>
+                <div>
+                    <p class="text-sm font-medium text-gray-700">管理层视图</p>
+                    <p class="text-xs text-gray-400">2026年1月规划</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 bg-white border-b border-gray-200 p-4 z-20 flex justify-between items-center">
+        <h1 class="text-lg font-bold text-gray-800"><i class="fas fa-video text-emerald-600 mr-2"></i>视频号战略</h1>
+        <button onclick="toggleMobileMenu()" class="text-gray-600 focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </div>
+    
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-30 hidden" onclick="toggleMobileMenu()">
+        <div class="bg-white w-64 h-full p-4 transform transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-bold text-lg">导航</h2>
+                <button onclick="toggleMobileMenu()" class="text-gray-500"><i class="fas fa-times"></i></button>
+            </div>
+            <ul class="space-y-2">
+                <li><button onclick="navigateTo('dashboard'); toggleMobileMenu()" class="w-full text-left py-2 px-2 hover:bg-gray-100 rounded">战略总览</button></li>
+                <li><button onclick="navigateTo('alliance'); toggleMobileMenu()" class="w-full text-left py-2 px-2 hover:bg-gray-100 rounded">推客联盟体系</button></li>
+                <li><button onclick="navigateTo('cml'); toggleMobileMenu()" class="w-full text-left py-2 px-2 hover:bg-gray-100 rounded">中央素材库</button></li>
+                <li><button onclick="navigateTo('operations'); toggleMobileMenu()" class="w-full text-left py-2 px-2 hover:bg-gray-100 rounded">运营实操 SOP</button></li>
+                <li><button onclick="navigateTo('growth'); toggleMobileMenu()" class="w-full text-left py-2 px-2 hover:bg-gray-100 rounded">增量赛道</button></li>
+                <li><button onclick="navigateTo('action'); toggleMobileMenu()" class="w-full text-left py-2 px-2 hover:bg-gray-100 rounded">行动清单</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto bg-[#fdfbf7] p-4 md:p-8 pt-20 md:pt-8 scroll-smooth" id="main-content">
+        
+        <!-- SECTION: DASHBOARD -->
+        <section id="dashboard" class="fade-in space-y-6">
+            <header class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">核心战略定位</h2>
+                <p class="text-gray-600">为什么选择视频号？不仅仅是短视频平台，更是微信生态的超级连接器。</p>
+            </header>
+
+            <!-- Key Insight Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-blue-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500 uppercase font-bold tracking-wider">底层逻辑</p>
+                            <h3 class="text-xl font-bold text-gray-800 mt-1">留量思维</h3>
+                        </div>
+                        <div class="p-2 bg-blue-100 rounded-lg text-blue-600"><i class="fas fa-network-wired"></i></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">不同于抖音的流量思维。利用社交关系链，建立不可复制的信任护城河。</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-emerald-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500 uppercase font-bold tracking-wider">核心基调</p>
+                            <h3 class="text-xl font-bold text-gray-800 mt-1">信任与耐心</h3>
+                        </div>
+                        <div class="p-2 bg-emerald-100 rounded-lg text-emerald-600"><i class="fas fa-hand-holding-heart"></i></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">家庭化、生活化。摒弃叫卖式直播，转向高信任度、重服务的“聊天式”带货。</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-orange-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm text-gray-500 uppercase font-bold tracking-wider">当前红利</p>
+                            <h3 class="text-xl font-bold text-gray-800 mt-1">投流+冷启动</h3>
+                        </div>
+                        <div class="p-2 bg-orange-100 rounded-lg text-orange-600"><i class="fas fa-fire"></i></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">ADQ/微信豆投流尚处红利期。优质内容更易获官方扶持，撬动社交推荐。</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Comparison Chart -->
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">平台属性差异化分析</h3>
+                    <div class="chart-container">
+                        <canvas id="platformRadarChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-500 mt-4">图表展示了微信视频号在社交信任和用户耐心方面的显著优势。</p>
+                </div>
+
+                <!-- Textual Strategy -->
+                <div class="bg-white p-6 rounded-xl card-shadow flex flex-col justify-center">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">战略判断</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-red-100 text-red-500 rounded-full flex items-center justify-center text-xs mr-3 mt-0.5"><i class="fas fa-times"></i></span>
+                            <div>
+                                <strong class="text-gray-800">误区：</strong>
+                                <span class="text-gray-600">照搬抖音“强视觉刺激、快节奏、逼单”的打法。</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-xs mr-3 mt-0.5"><i class="fas fa-check"></i></span>
+                            <div>
+                                <strong class="text-gray-800">正解：</strong>
+                                <span class="text-gray-600">打通“公号+社群+企业微信”。视频号是原子组件，用于连接，而非孤立的流量池。</span>
+                            </div>
+                        </li>
+                        <li class="bg-gray-50 p-4 rounded-lg mt-2">
+                            <strong class="block text-gray-800 mb-1">用户画像洞察：</strong>
+                            <p class="text-sm text-gray-600">年龄层偏高（30-55岁），高净值。他们是家庭决策者，更看重品质而非低价。</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: ALLIANCE (RESEARCH DEEP DIVE) -->
+        <section id="alliance" class="hidden fade-in space-y-6">
+            <header class="mb-6 border-b border-gray-200 pb-4">
+                <h2 class="text-3xl font-bold text-emerald-800 mb-2">推客联盟体系 (进阶研究)</h2>
+                <p class="text-gray-600">如何构建“公私域联动”的商业闭环，并科学划定分销利益链条。</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Research Concept 1 -->
+                <div class="col-span-1 lg:col-span-2 bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-calculator text-emerald-500 mr-2"></i>分销利润分配模拟器</h3>
+                    <p class="text-sm text-gray-500 mb-6">输入您的产品成本和售价，测算在保证企业利润的前提下，能给予分销商（推客）的最大激励空间。</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">产品零售价 (元)</label>
+                                <input type="number" id="retailPrice" value="299" class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:border-emerald-500" oninput="calculateProfit()">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">综合成本 (元) <span class="text-xs font-normal lowercase">(货本+物流+包材)</span></label>
+                                <input type="number" id="costPrice" value="120" class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:border-emerald-500" oninput="calculateProfit()">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">平台扣点 (%) <span class="text-xs font-normal lowercase">(微信小店约 2-5%)</span></label>
+                                <input type="number" id="platformFee" value="2" class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:border-emerald-500" oninput="calculateProfit()">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">分销商佣金比例 (%)</label>
+                                <input type="range" id="commissionRate" min="0" max="50" value="20" class="w-full accent-emerald-600" oninput="document.getElementById('commRateDisplay').innerText = this.value + '%'; calculateProfit()">
+                                <div class="flex justify-between text-xs text-gray-400">
+                                    <span>0%</span>
+                                    <span id="commRateDisplay" class="font-bold text-emerald-600">20%</span>
+                                    <span>50%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg flex flex-col justify-center">
+                            <div class="mb-4 pb-4 border-b border-gray-200">
+                                <p class="text-sm text-gray-500">分销商(推客) 获得</p>
+                                <p class="text-2xl font-bold text-emerald-600">¥<span id="distributorEarn">0</span></p>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-sm text-gray-500">企业(我们) 净利</p>
+                                <p class="text-2xl font-bold text-blue-600">¥<span id="companyProfit">0</span></p>
+                                <p class="text-xs text-gray-400 mt-1">净利率: <span id="profitMargin">0</span>%</p>
+                            </div>
+                            <div id="profitWarning" class="hidden bg-red-100 text-red-600 text-xs p-2 rounded">
+                                <i class="fas fa-exclamation-triangle"></i> 警告：净利过低，风险较大。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Concept 2 -->
+                <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-100">
+                    <h3 class="text-lg font-bold text-emerald-900 mb-3">分销激励策略建议</h3>
+                    <ul class="space-y-3 text-sm text-emerald-800">
+                        <li class="flex gap-2">
+                            <i class="fas fa-bullseye mt-1"></i>
+                            <div>
+                                <strong>引流款 (低佣金):</strong> 
+                                <br>佣金 5-10%。目的是为了让推客容易成交，建立信心，而非赚钱。
+                            </div>
+                        </li>
+                        <li class="flex gap-2">
+                            <i class="fas fa-star mt-1"></i>
+                            <div>
+                                <strong>利润款 (高佣金):</strong> 
+                                <br>佣金 20-35%。这是推客的核心动力来源，需提供最全的素材支持。
+                            </div>
+                        </li>
+                        <li class="flex gap-2">
+                            <i class="fas fa-crown mt-1"></i>
+                            <div>
+                                <strong>阶梯激励:</strong> 
+                                <br>月销售额破1万，次月佣金提升2%。设置“销冠奖”激发荣誉感。
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Sharing System -->
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">转发与预约体系：社交货币逻辑</h3>
+                    <p class="text-sm text-gray-600 mb-4">视频号增长的核心是社交裂变。用户执行以下动作的心理驱动力分析：</p>
+                    
+                    <div class="space-y-4">
+                        <div class="border border-gray-100 rounded-lg p-3 hover:shadow-md transition-shadow">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-blue-100 text-blue-600 p-1.5 rounded text-xs mr-2"><i class="fas fa-calendar-check"></i> 预约直播</span>
+                                <span class="text-xs font-bold text-gray-500 ml-auto">策略：事件营销</span>
+                            </div>
+                            <p class="text-sm text-gray-700"><strong>驱动力：</strong>稀缺性与强提醒。</p>
+                            <p class="text-xs text-gray-500 mt-1">话术：“下周三晚8点，揭秘行业内幕，错过无回放。”<br>机制：预约后，微信服务通知会强弹窗，触达率远高于推送。</p>
+                        </div>
+
+                        <div class="border border-gray-100 rounded-lg p-3 hover:shadow-md transition-shadow">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-purple-100 text-purple-600 p-1.5 rounded text-xs mr-2"><i class="fas fa-share-alt"></i> 转发给朋友</span>
+                                <span class="text-xs font-bold text-gray-500 ml-auto">策略：社交货币 (利他)</span>
+                            </div>
+                            <p class="text-sm text-gray-700"><strong>驱动力：</strong>实用主义。</p>
+                            <p class="text-xs text-gray-500 mt-1">话术：“把这条视频转给你们家那位看看，能解决XX痛点。”<br>逻辑：让用户觉得转发这个视频是在“帮”朋友。</p>
+                        </div>
+
+                        <div class="border border-gray-100 rounded-lg p-3 hover:shadow-md transition-shadow">
+                            <div class="flex items-center mb-2">
+                                <span class="bg-pink-100 text-pink-600 p-1.5 rounded text-xs mr-2"><i class="fas fa-heart"></i> 转发朋友圈</span>
+                                <span class="text-xs font-bold text-gray-500 ml-auto">策略：身份认同 (面子)</span>
+                            </div>
+                            <p class="text-sm text-gray-700"><strong>驱动力：</strong>人设塑造。</p>
+                            <p class="text-xs text-gray-500 mt-1">逻辑：用户转发的内容代表了他的品味。视频必须精美、观点必须正能量/深刻，让用户觉得“转这个显得我有水平”。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Funnel Visual -->
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">商业闭环漏斗</h3>
+                    <div class="relative pt-4">
+                        <!-- Funnel Steps -->
+                        <div class="mx-auto w-3/4 bg-gray-200 text-center py-2 rounded-t-lg mb-1 text-gray-700 text-sm font-bold relative group cursor-pointer hover:bg-gray-300">
+                            公域引流
+                            <div class="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 text-xs text-left w-32 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white p-2 rounded z-10">短视频 + 投流 + 社交推荐</div>
+                        </div>
+                        <div class="mx-auto w-2/3 bg-blue-200 text-center py-2 mb-1 text-blue-800 text-sm font-bold relative group cursor-pointer hover:bg-blue-300">
+                            直播承接
+                            <div class="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 text-xs text-left w-32 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white p-2 rounded z-10">挂载直播预告，强互动留人</div>
+                        </div>
+                        <div class="mx-auto w-1/2 bg-indigo-200 text-center py-2 mb-1 text-indigo-800 text-sm font-bold relative group cursor-pointer hover:bg-indigo-300">
+                            私域沉淀
+                            <div class="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 text-xs text-left w-32 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white p-2 rounded z-10">添加企业微信，进入社群</div>
+                        </div>
+                        <div class="mx-auto w-1/3 bg-emerald-200 text-center py-2 rounded-b-lg text-emerald-800 text-sm font-bold relative group cursor-pointer hover:bg-emerald-300">
+                            裂变分销
+                            <div class="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 text-xs text-left w-32 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white p-2 rounded z-10">转化KOC为推客，复利增长</div>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-xs text-gray-500 p-3 bg-gray-50 rounded">
+                        <strong>操作要点：</strong> 不要试图在短视频里直接成交高客单价产品。短视频的目的是“种草”和“引流”，直播间和私域才是“拔草”和“复购”的战场。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: CML (Deep Dive) -->
+        <section id="cml" class="hidden fade-in space-y-6">
+            <header class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">中央素材库 (CML) 建设规划</h2>
+                <p class="text-gray-600">为避免依赖单一达人，保证内容产出标准化，需建立线上中央素材库。</p>
+            </header>
+
+            <div class="bg-white p-8 rounded-xl card-shadow overflow-hidden relative">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i class="fas fa-database text-9xl"></i>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-800 mb-6 text-center">CML 运作工作流</h3>
+
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative">
+                    <!-- Step 1 -->
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg w-full md:w-1/4 text-center z-10">
+                        <div class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">1</div>
+                        <h4 class="font-bold text-blue-900">运营部 (策划)</h4>
+                        <p class="text-xs text-gray-600 mt-2">撰写脚本、分镜设计、风控审核。</p>
+                    </div>
+
+                    <!-- Connector -->
+                    <div class="hidden md:block h-0.5 bg-gray-300 flex-1"></div>
+                    <div class="md:hidden w-0.5 h-8 bg-gray-300"></div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-lg w-full md:w-1/4 text-center z-10">
+                        <div class="w-10 h-10 bg-indigo-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">2</div>
+                        <h4 class="font-bold text-indigo-900">拍摄 (采集)</h4>
+                        <p class="text-xs text-gray-600 mt-2">达人/VIP仅作为“演员”出镜，只需按脚本演绎。</p>
+                    </div>
+
+                    <!-- Connector -->
+                    <div class="hidden md:block h-0.5 bg-gray-300 flex-1"></div>
+                    <div class="md:hidden w-0.5 h-8 bg-gray-300"></div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-purple-50 border border-purple-200 p-4 rounded-lg w-full md:w-1/4 text-center z-10">
+                        <div class="w-10 h-10 bg-purple-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">3</div>
+                        <h4 class="font-bold text-purple-900">中央库 (加工)</h4>
+                        <p class="text-xs text-gray-600 mt-2">剪辑成片、生成不同版本（混剪）、上传云盘。</p>
+                    </div>
+
+                    <!-- Connector -->
+                    <div class="hidden md:block h-0.5 bg-gray-300 flex-1"></div>
+                    <div class="md:hidden w-0.5 h-8 bg-gray-300"></div>
+
+                    <!-- Step 4 -->
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg w-full md:w-1/4 text-center z-10">
+                        <div class="w-10 h-10 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">4</div>
+                        <h4 class="font-bold text-emerald-900">矩阵分发</h4>
+                        <p class="text-xs text-gray-600 mt-2">员工号、分销员、子账号下载发布。</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border border-gray-100 p-4 rounded-lg">
+                        <h5 class="font-bold text-gray-700 mb-2">📂 文件夹结构建议</h5>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>📁 01_脚本库 (按产品/场景分类)</li>
+                            <li>📁 02_原始素材 (Raw Footage)</li>
+                            <li>📁 03_成品视频 (可直接发布)</li>
+                            <li>&nbsp;&nbsp;└─ 竖屏版 (视频号)</li>
+                            <li>&nbsp;&nbsp;└─ 横屏版 (公众号)</li>
+                            <li>📁 04_直播切片 (Highligts)</li>
+                        </ul>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded-lg">
+                        <h5 class="font-bold text-gray-700 mb-2">🎥 核心优势</h5>
+                        <p class="text-xs text-gray-500">“铁打的营盘流水的兵”。核心内容资产掌握在公司手中，不仅便于规模化复制账号矩阵，也降低了达人离职带来的资产流失风险。</p>
+                    </div>
+                    <div class="border border-gray-100 p-4 rounded-lg">
+                        <h5 class="font-bold text-gray-700 mb-2">⚠️ 执行难点</h5>
+                        <p class="text-xs text-gray-500">需要强大的后期剪辑调度能力，以及对素材的标签化管理（如：这的一段“大笑”素材可以用在哪些脚本里）。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: OPERATIONS -->
+        <section id="operations" class="hidden fade-in space-y-6">
+            <header class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">运营实操 SOP</h2>
+                <p class="text-gray-600">从冷启动到直播间的标准化动作。</p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Personas -->
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3 text-center">账号人设：国泰民安脸</h3>
+                    <div class="flex justify-center mb-4">
+                         <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-4xl">👩‍💼</div>
+                    </div>
+                    <ul class="text-sm space-y-2 text-gray-600">
+                        <li><strong>形象：</strong> 端庄、大气、亲和力强。拒绝过度美颜的“网红脸”。</li>
+                        <li><strong>定位：</strong> 资深行业专家、邻家懂行的大姐/大哥。</li>
+                        <li><strong>表现力：</strong> 眼神真诚，语速适中，传递情绪价值。</li>
+                        <li><strong>原因：</strong> 目标受众（30-55岁）对“专业且靠谱”的买单意愿最强。</li>
+                    </ul>
+                </div>
+
+                <!-- Cold Start -->
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3"><i class="fas fa-snowflake text-blue-400 mr-2"></i>冷启动逻辑</h3>
+                    <p class="text-sm text-gray-600 mb-3">视频号依赖<strong>标签匹配</strong>而非广撒网。</p>
+                    <div class="space-y-3">
+                        <div class="bg-gray-50 p-3 rounded text-sm">
+                            <span class="font-bold text-gray-800">1. 垂直起号:</span>
+                            <span class="text-gray-600">前5-10条必须极度垂直，告诉算法“我是谁”。</span>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded text-sm">
+                            <span class="font-bold text-gray-800">2. 私域撬动:</span>
+                            <span class="text-gray-600">发布后立即发动员工/老客点赞。逻辑：朋友喜欢 -> 朋友的朋友看到 -> 触发公域推荐。</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Stream Style -->
+                <div class="bg-white p-6 rounded-xl card-shadow">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3"><i class="fas fa-video text-red-500 mr-2"></i>直播间差异</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase">节奏</p>
+                            <p class="text-sm text-gray-700">慢下来。给主播30秒讲故事，而不是3秒逼单。</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase">互动</p>
+                            <p class="text-sm text-gray-700">念ID，回评论。观众渴望被尊重。</p>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase">讲解</p>
+                            <p class="text-sm text-gray-700">侧重细节、材质、场景。高净值人群看重品质。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Mgmt -->
+            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg mt-6">
+                <h4 class="font-bold text-red-800 mb-2"><i class="fas fa-shield-alt"></i> 危机管理与风控</h4>
+                <p class="text-sm text-red-700">严格规避微信生态红线（诱导分享、夸大营销、绝对化用语）。封禁力度大且申诉难。<strong>对策：</strong>建立敏感词库，脚本发布前必审。</p>
+            </div>
+        </section>
+
+        <!-- SECTION: GROWTH (SEO) -->
+        <section id="growth" class="hidden fade-in space-y-6">
+            <header class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">增量赛道：搜一搜 (SEO)</h2>
+                <p class="text-gray-600">全域流量的“暗门”。主动搜索流量比被动推荐流量更精准。</p>
+            </header>
+
+            <div class="bg-white p-8 rounded-xl card-shadow flex flex-col md:flex-row gap-8 items-center">
+                <div class="w-full md:w-1/2">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">布局策略</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-tag text-emerald-500 mt-1 mr-3"></i>
+                            <div>
+                                <strong class="text-gray-800">关键词占位</strong>
+                                <p class="text-sm text-gray-600">覆盖行业热搜词（如“装修避坑”、“护肤品怎么选”）。嵌入标题、话题标签(#)和口播文案。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-sort-amount-up text-emerald-500 mt-1 mr-3"></i>
+                            <div>
+                                <strong class="text-gray-800">高权重排名</strong>
+                                <p class="text-sm text-gray-600">视频号内容在微信搜索中权重极高，往往排在公众号之前。这是长尾流量的来源。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/2 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h4 class="text-sm font-bold text-gray-500 uppercase mb-3 text-center">双螺旋结构</h4>
+                    <div class="flex flex-col gap-2">
+                        <div class="bg-white p-3 rounded shadow-sm text-center">
+                            <span class="block font-bold text-gray-800">视频号</span>
+                            <span class="text-xs text-gray-500">展示外观、氛围、挂公号链接</span>
+                        </div>
+                        <div class="flex justify-center text-gray-400 text-lg"><i class="fas fa-exchange-alt rotate-90"></i></div>
+                        <div class="bg-white p-3 rounded shadow-sm text-center">
+                            <span class="block font-bold text-gray-800">公众号</span>
+                            <span class="text-xs text-gray-500">讲深度逻辑、品牌故事、插预约卡片</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-4">解决视频号难讲清复杂产品（高客单价/科技）的痛点。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: ACTION PLAN -->
+        <section id="action" class="hidden fade-in space-y-6">
+             <header class="mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">行动清单 (Action Plan)</h2>
+                <p class="text-gray-600">将战略转化为具体的可执行步骤。</p>
+            </header>
+
+            <div class="bg-white p-6 rounded-xl card-shadow">
+                <div class="space-y-2" id="checklist-container">
+                    <!-- Javascript will populate this -->
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-100">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-emerald-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <p class="text-xs text-right text-gray-500 mt-1">进度: <span id="progress-text">0%</span></p>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 text-white p-6 rounded-xl mt-8">
+                <h3 class="text-lg font-bold mb-2">矩阵布局建议 (1+N)</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mt-4">
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <div class="text-xl mb-2">🏢</div>
+                        <h4 class="font-bold">1个 品牌主账号</h4>
+                        <p class="text-xs text-gray-400">官方形象、权威背书、稳重</p>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <div class="text-xl mb-2">🎓</div>
+                        <h4 class="font-bold">N个 专家号</h4>
+                        <p class="text-xs text-gray-400">讲干货、建立专业度</p>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <div class="text-xl mb-2">🤝</div>
+                        <h4 class="font-bold">N个 分销/员工号</h4>
+                        <p class="text-xs text-gray-400">接地气、细分人群、风险对冲</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // State Management
+        const state = {
+            currentSection: 'dashboard',
+            checklist: [
+                { id: 1, text: "基建搭建：开通视频号、关联公号、配置企微客服", checked: false },
+                { id: 2, text: "选角试镜：寻找内部“国泰民安脸”员工或达人", checked: false },
+                { id: 3, text: "素材库建立：制作第一批30个短视频脚本", checked: false },
+                { id: 4, text: "SEO布局：整理行业Top 50搜索关键词", checked: false },
+                { id: 5, text: "预约测试：策划首秀，全力拉升预约人数", checked: false },
+                { id: 6, text: "分销测试：招募10-20位种子推客测试流程", checked: false }
+            ]
+        };
+
+        // Navigation Logic
+        function navigateTo(sectionId) {
+            // Update State
+            state.currentSection = sectionId;
+
+            // UI Updates
+            document.querySelectorAll('section').forEach(el => {
+                if(!el.classList.contains('hidden')) el.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            // Nav Styling
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'bg-gray-50', 'text-emerald-600', 'border-right'));
+            const activeNav = document.getElementById('nav-' + sectionId);
+            if(activeNav) {
+                activeNav.classList.add('active');
+            }
+
+            // Trigger Chart Render if on dashboard
+            if (sectionId === 'dashboard') {
+                renderCharts();
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Profit Calculator Logic
+        function calculateProfit() {
+            const retail = parseFloat(document.getElementById('retailPrice').value) || 0;
+            const cost = parseFloat(document.getElementById('costPrice').value) || 0;
+            const platformPct = parseFloat(document.getElementById('platformFee').value) || 0;
+            const commPct = parseFloat(document.getElementById('commissionRate').value) || 0;
+
+            const platformFee = retail * (platformPct / 100);
+            const distributorComm = retail * (commPct / 100);
+            const netProfit = retail - cost - platformFee - distributorComm;
+            
+            const margin = retail > 0 ? ((netProfit / retail) * 100).toFixed(1) : 0;
+
+            // Update DOM
+            document.getElementById('distributorEarn').innerText = distributorComm.toFixed(2);
+            document.getElementById('companyProfit').innerText = netProfit.toFixed(2);
+            document.getElementById('profitMargin').innerText = margin;
+
+            // Warning Logic
+            const warning = document.getElementById('profitWarning');
+            if (margin < 10) {
+                warning.classList.remove('hidden');
+            } else {
+                warning.classList.add('hidden');
+            }
+        }
+
+        // Checklist Logic
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = '';
+            
+            state.checklist.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center p-3 border border-gray-100 rounded hover:bg-gray-50 cursor-pointer transition-colors';
+                div.onclick = () => toggleCheck(item.id);
+                
+                const icon = item.checked ? '<i class="fas fa-check-square text-emerald-600 text-xl"></i>' : '<i class="far fa-square text-gray-400 text-xl"></i>';
+                const textClass = item.checked ? 'ml-3 text-gray-400 line-through' : 'ml-3 text-gray-700';
+                
+                div.innerHTML = `
+                    ${icon}
+                    <span class="${textClass}">${item.text}</span>
+                `;
+                container.appendChild(div);
+            });
+
+            updateProgress();
+        }
+
+        function toggleCheck(id) {
+            const item = state.checklist.find(i => i.id === id);
+            if (item) item.checked = !item.checked;
+            renderChecklist();
+        }
+
+        function updateProgress() {
+            const total = state.checklist.length;
+            const checked = state.checklist.filter(i => i.checked).length;
+            const pct = Math.round((checked / total) * 100);
+            
+            document.getElementById('progress-bar').style.width = pct + '%';
+            document.getElementById('progress-text').innerText = pct + '%';
+        }
+
+        // Chart.js Rendering
+        let radarChart = null;
+
+        function renderCharts() {
+            const ctx = document.getElementById('platformRadarChart').getContext('2d');
+            
+            if (radarChart) {
+                // If chart exists, destroy it to avoid overlap or memory leaks
+                // However, simple re-rendering without data change doesn't strictly require destroy in this specific simple app context,
+                //但是很好的做法。
+                // For simplicity in this specific "show/hide" SPA logic, we only create if null or let it persist.
+                return; 
+            }
+
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                数据: {
+                    labels: ['社交信任度', '视觉刺激', '内容节奏', '用户耐心', '公域爆发力', '粉丝粘性'],
+                    datasets: [{
+                        标签: '微信视频号',
+                        数据: [95, 60, 40, 90, 70, 95],
+填充:没错,
+                        backgroundColor: 'rgba(5, 150, 105, 0.2)', // Emerald
+                        borderColor: 'rgb(5, 150, 105)',
+                        pointBackgroundColor: 'rgb(5, 150, 105)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(5, 150, 105)'
+                    }, {
+                        label: '抖音/快手',
+                        data: [50, 95, 95, 40, 95, 50],
+                        fill: true,
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)', // Blue
+                        borderColor: ‘rgb(59,130,246)’,
+                        pointBackgroundColor: ‘rgb(59,130,246)’,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(59, 130, 246)'
+                    }]
+                },
+                选项: {
+                    响应: 真正的,
+                    maintainAspectRatio: 假,
+                    元素: {
+                        行: { borderWidth: 3 }
+                    },
+                    scales: {
+                        r: {
+angleLines: {display: 假}；
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        / /初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            renderCharts(); // Render initially
+            renderChecklist();
+            calculateProfit(); // Init calculator
+        });
+
+    </script>
+< / body>
+</< / html>>
